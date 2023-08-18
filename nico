@@ -1,0 +1,49 @@
+void MayorDeEdad(){
+    Alumno dato;
+    FILE *archivo;
+    archivo = fopen("miarchivo.bin","rb");
+
+    if(archivo != NULL){
+
+        while(!feof(archivo)){
+            fread(&dato,sizeof(Alumno),1,archivo);
+            if( !feof(archivo) && dato.edad > 17){
+                mostrarArchivo(dato);
+            }
+        }
+
+    }
+    fclose(archivo);
+ }
+
+
+ ///Crear una función que retorne la cantidad de alumnos que cursan un determinado año. El
+///año buscado se pasa por parámetro.
+
+
+int cantidadCursantesnio(int anio){
+    int contador = 0;
+    Alumno dato;
+    FILE *archivo;
+    archivo = fopen("miarchivo.bin","rb");
+
+    if(archivo != NULL){
+        while(!feof(archivo)){
+            fread(&dato,sizeof(Alumno),1,archivo);
+            if(!feof(archivo) && dato.anio == anio){
+                contador++;
+            }
+        }
+       fclose(archivo);
+    }
+    return contador;
+}
+
+///12. Crear una función que reciba como parámetro un arreglo de tipo alumno y lo copie en el
+///archivo. Asimismo, realice otra función que pase los elementos del archivo a un arreglo de
+///alumnos, filtrando los estudiantes de un año en particular.
+
+void archivoAarreglo(Alumno arreglo [30]){
+
+
+}

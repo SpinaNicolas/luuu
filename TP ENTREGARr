@@ -24,12 +24,16 @@ void cargarinventario ();
 void mostrarArchivo();
 void buscarPorNombre ();
 void buscarPorcodigo();
+int contarREGISTROS();
 
 int main()
 {
     producto inventario[100];
     cargarinventario ();
     mostrarArchivo();
+    int cantidad = 0;
+    cantidad = contarREGISTROS();
+    printf("\t \t se ingresaron %i datos al archivo /n",cantidad);
     buscarPorNombre ();
     buscarPorcodigo();
 }
@@ -78,26 +82,21 @@ void cargarinventario ()                /**Realiza la carga de productos a un ar
     fclose(archivo);
 }
 
+/// funcion que muestra todos los datos del archivo
 
 void mostrarArchivo()
 {
     FILE *archivo;
     producto dato;
     archivo = fopen("archivo.bin","rb");
+    printf("\t \t TODOS LOS DATOS DEL ARCHIVO \n");
     if(archivo != NULL)
     {
         while(!feof(archivo))
         {
             fread(&dato,sizeof(producto),1,archivo);
             if(!feof(archivo))
-                {
-                puts ("------------------------------------------------------");
-                printf("PRODUCTO: %s\n", dato.nombreProducto);
-                printf("PRECIO: %i\n", dato.precio);
-                printf("STOCK: %i\n", dato.stock);
-                printf("CODIGO: %i\n", dato.codigo);
-                puts ("------------------------------------------------------");
-              }
+               IMPRIMIR(dato);
         }
 
     }
@@ -105,7 +104,19 @@ fclose(archivo);
 
 }
 
+/// funcion que solo imprime datos ya buscados
 
+void IMPRIMIR(producto dato){
+        puts ("------------------------------------------------------");
+        printf("PRODUCTO: %s\n", dato.nombreProducto);
+        printf("PRECIO: %i\n", dato.precio);
+        printf("STOCK: %i\n", dato.stock);
+        printf("CODIGO: %i\n", dato.codigo);
+        puts ("------------------------------------------------------");
+
+}
+
+/// funcion que busca el nombre del producto ingresado
 void buscarPorNombre ()
 {
     producto inventarioNuevo;
@@ -123,16 +134,13 @@ void buscarPorNombre ()
 
             if (!feof(archivo) && strcmp(inventarioAbuscar,inventarioNuevo.nombreProducto)==0)
             {
-                puts ("------------------------------------------------------");
-                printf("PRODUCTO: %s\n", inventarioNuevo.nombreProducto);
-                printf("PRECIO: %i\n", inventarioNuevo.precio);
-                printf("STOCK: %i\n", inventarioNuevo.stock);
-                printf("CODIGO: %i\n", inventarioNuevo.codigo);
-                puts ("------------------------------------------------------");
+
             }
         }
 
-
+   puts ("------------------------------------------------------");
+    printf("el producto ingresado no se encontro \n");
+   puts ("------------------------------------------------------");
     }
     else {
         printf("EL ARCHIVO NO EXISTE!!");
@@ -141,7 +149,7 @@ void buscarPorNombre ()
 }
 
 
-
+/// pregunta el codigo a buscar
 int CODIGOABUSCAR()
 {
     int codigo;
@@ -153,6 +161,7 @@ int CODIGOABUSCAR()
 
 }
 
+/// busca el codigo ingresado y imprime sus datos
 void buscarPorcodigo()
 {
     producto dato;
@@ -169,12 +178,7 @@ void buscarPorcodigo()
             fread(&dato, sizeof(producto),1,archivo);
             if(!feof(archivo) && codigo == dato.codigo)
             {
-                puts ("------------------------------------------------------");
-                printf("PRODUCTO: %s\n", dato.nombreProducto);
-                printf("PRECIO: %i\n", dato.precio);
-                printf("STOCK: %i\n", dato.stock);
-                printf("CODIGO: %i\n", dato.codigo);
-                puts ("------------------------------------------------------");
+                IMPRIMIR(dato);
 
             }
         }
@@ -184,4 +188,23 @@ void buscarPorcodigo()
         printf("EL ARCHIVO NO EXISTE!\n");
     }
     fclose(archivo);
+}
+
+/// esta funcion dice la cantidad de registros que sin ingresaron sin recorrer el archivo.
+int contarREGISTROS()
+{
+    int cantidad = 0;
+
+    FILE *archivo;
+    archivo = fopen("archivo.bin","rb");
+
+    if(archivo != NULL)
+    {
+        fseek(archivo,0,SEEK_END);
+        cantidad = ftell(archivo) / sizeof(producto);
+
+    }
+    fclose(archivo);
+    return cantidad;
+
 }
